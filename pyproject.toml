@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lvc-linkedin-visitor-conversion"
+version = "0.1.0"
+description = "Turn LinkedIn page visitors/followers into a qualified, human-approved outreach queue. Manual in, human-approved out. No scraping, no auto-sending."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+dependencies = ["PyYAML>=5.4"]
+
+[project.scripts]
+lvc = "lvc.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

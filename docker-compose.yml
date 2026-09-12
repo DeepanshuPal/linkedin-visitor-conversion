@@ -1,0 +1,11 @@
+# Optional convenience - the CLI runs fine with plain pip too.
+# Persists the sqlite db and your config.yaml in the project directory.
+services:
+  lvc:
+    build: .
+    volumes:
+      - .:/app
+    env_file:
+      - .env   # put OPENROUTER_API_KEY=... here (never commit it)
+    stdin_open: true   # needed for `lvc review` and paste ingest
+    tty: true

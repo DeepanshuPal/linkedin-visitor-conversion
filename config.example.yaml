@@ -1,0 +1,16 @@
+# lvc config - fill in your ICP and voice, keep keys in env vars.
+icp_blurb: ""                # who buys from you, one paragraph
+qualification_criteria: ""   # e.g. "B2B SaaS founders and growth leads, 10-200 staff"
+voice_notes: ""              # how you write; drafts match this + your past edits
+
+provider: openrouter         # openrouter | mock (mock = offline dry run, no key)
+model: openai/gpt-4o-mini    # any OpenRouter model id
+openrouter_api_key_env: OPENROUTER_API_KEY
+
+qualification_threshold: 60  # 0-100; >= threshold moves to drafting
+draft_kind: connection_note  # connection_note | followup
+connection_note_char_limit: 300
+few_shot_examples: 3
+max_new_notes_per_day: 20    # rate cap on approvals - protects your account
+
+db_path: lvc.db
