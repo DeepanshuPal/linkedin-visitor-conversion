@@ -1,0 +1,21 @@
+# CI only. lvc runs interactively or under your own scheduler (cron, Docker
+# Compose) - GitHub Actions is not the production runner for the queue, and
+# scheduled jobs are auto-disabled after 60 days of repo inactivity.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - run: pip install .
+      - name: end-to-end pipeline test (mock provider, no keys, no network)
+        run: python -m unittest discover -s tests -v

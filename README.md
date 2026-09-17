@@ -1,7 +1,8 @@
 # lvc - LinkedIn Visitor Conversion
 
-Marketerloop template #3: turn your LinkedIn page visitors and followers into a
-qualified, human-approved outreach queue. CLI-first, BYOK, local-first.
+[Marketerloop](https://github.com/DeepanshuPal/marketerloop) template #3: turn
+your LinkedIn page visitors and followers into a qualified, human-approved
+outreach queue. CLI-first, BYOK, local-first.
 
 **Manual in, human-approved out.** This tool never scrapes LinkedIn and never
 sends anything for you.
@@ -142,6 +143,17 @@ Stubbed / unverified:
 - **LinkedIn-side export instructions** - the exact Premium Company Page
   visitor export UX changes often; expect to copy-paste rather than download
   a CSV.
+
+## Upgrade path: enrichment before scoring
+
+v0 scores on the headline text you paste in. The named upgrade is an
+enrichment step in front of qualification: resolve each profile URL to public
+company and role context with **Exa** or **Firecrawl**, then qualify on that
+evidence instead of a one-line headline. It slots in as a stage between
+ingest and qualify, costs cents per lead, and stays optional - the manual CSV
+path remains the verified default. Not implemented in v0.1; the `runs` table
+already records the evidence window each decision used, so nothing about the
+audit trail changes when it lands.
 
 ## License
 
