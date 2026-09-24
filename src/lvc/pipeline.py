@@ -3,10 +3,10 @@ import csv
 import io
 import json
 import sys
-from urllib.parse import urlsplit
 
 from . import llm
 from .db import record_run, utcnow
+from .urls import normalize_url
 
 COLUMN_ALIASES = {
     "name": ["name", "full_name", "visitor", "person"],
@@ -15,16 +15,6 @@ COLUMN_ALIASES = {
     "profile_url": ["profile_url", "url", "profile", "linkedin", "linkedin_url", "profile url"],
     "visit_date": ["visit_date", "date", "visited_at", "visited", "visit date"],
 }
-
-
-def normalize_url(url):
-    url = (url or "").strip()
-    if not url:
-        return ""
-    parts = urlsplit(url if "://" in url else f"https://{url}")
-    netloc = parts.netloc.lower()
-    path = parts.path.rstrip("/")
-    return f"https://{netloc}{path}"
 
 
 def _map_columns(fieldnames):

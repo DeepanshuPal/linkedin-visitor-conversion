@@ -3,6 +3,8 @@ import json
 import sqlite3
 from datetime import datetime, timezone
 
+from .urls import normalize_url
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS leads (
   id INTEGER PRIMARY KEY,
@@ -73,7 +75,31 @@ def connect(db_path):
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA)
+    canonicalize_profile_urls(conn)
     return conn
+
+
+def canonicalize_profile_urls(conn):
+    """Rewrite leads stored under an older URL form to the current canonical key.
+
+    Rows whose canonical URL is already taken by another lead are left alone:
+    they were ingested as separate leads before, and merging them would mix
+    two draft and outcome histories.
+    """
+    rows = conn.execute("SELECT id, profile_url FROM leads").fetchall()
+    taken = {r["profile_url"] for r in rows}
+    changed = 0
+    for r in rows:
+        canonical = normalize_url(r["profile_url"])
+        if canonical == r["profile_url"] or canonical in taken:
+            continue
+        conn.execute("UPDATE leads SET profile_url=? WHERE id=?", (canonical, r["id"]))
+        taken.discard(r["profile_url"])
+        taken.add(canonical)
+        changed += 1
+    if changed:
+        conn.commit()
+    return changed
 
 
 def record_run(conn, kind, started_at, inputs=None, model=None, prompt_version=None,

@@ -86,6 +86,14 @@ the same commands on your real export.
 CSV with a header row. Only a profile URL column is strictly required; column
 names are matched loosely (`url`, `profile`, `linkedin_url`, ... all work).
 
+Profile URLs are canonicalized before dedupe, because exports from different
+places spell the same person differently: `linkedin.com/in/Jane-Example/`,
+`https://uk.linkedin.com/in/jane-example?trk=...` and
+`https://www.linkedin.com/in/jane-example` are one lead. LinkedIn hosts collapse
+to `www.linkedin.com`, the path is lowercased (the custom part of a LinkedIn URL
+is case-insensitive), and query strings, fragments and trailing slashes are
+dropped. `lvc outcome` accepts any of these forms.
+
 ```csv
 name,headline,company,profile_url,visit_date
 Jane Example,VP Growth at ExampleCo,ExampleCo,https://www.linkedin.com/in/jane-example,2026-09-10
