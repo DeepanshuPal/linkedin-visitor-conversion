@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS drafts (
   state TEXT NOT NULL DEFAULT 'pending'
     CHECK (state IN ('pending','approved','edited','rejected','exported')),
   final_body TEXT,
-  reviewed_at TEXT
+  reviewed_at TEXT,
+  exported_at TEXT
 );
 CREATE TABLE IF NOT EXISTS edits (
   id INTEGER PRIMARY KEY,
@@ -75,6 +76,13 @@ def connect(db_path):
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA)
+    # Existing databases predate export timestamps. The past export date cannot
+    # be inferred from reviewed_at, so leave historical rows NULL rather than
+    # claiming they were exported on the day they were approved.
+    columns = {row["name"] for row in conn.execute("PRAGMA table_info(drafts)")}
+    if "exported_at" not in columns:
+        conn.execute("ALTER TABLE drafts ADD COLUMN exported_at TEXT")
+        conn.commit()
     canonicalize_profile_urls(conn)
     return conn
 
