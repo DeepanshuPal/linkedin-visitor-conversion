@@ -161,7 +161,7 @@ def export_approved(conn, cfg, out_path=None, mark_exported=True):
     cap = int(cfg.get("max_new_notes_per_day", 20))
     already = conn.execute(
         """SELECT COUNT(*) AS n FROM drafts
-           WHERE state='exported' AND date(reviewed_at) = date('now')""").fetchone()["n"]
+           WHERE state='exported' AND date(exported_at) = date('now')""").fetchone()["n"]
     warning = None
     if already + len(rows) > cap:
         warning = (f"rate cap: exporting {len(rows)} notes would bring today to "
@@ -180,8 +180,10 @@ def export_approved(conn, cfg, out_path=None, mark_exported=True):
         with open(out_path, "w", encoding="utf-8", newline="") as f:
             f.write(text)
     if mark_exported:
+        exported_at = utcnow()
         for r in rows:
-            conn.execute("UPDATE drafts SET state='exported' WHERE id=?", (r["draft_id"],))
+            conn.execute("UPDATE drafts SET state='exported', exported_at=? WHERE id=?",
+                         (exported_at, r["draft_id"]))
             conn.execute("UPDATE leads SET status='exported' WHERE id=?", (r["lead_id"],))
         conn.commit()
     record_run(conn, "export", started,
