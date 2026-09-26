@@ -133,7 +133,11 @@ database.
 ## Rate caps and account safety
 
 `max_new_notes_per_day` caps how many notes the approval queue will let you
-approve in a day, and export warns/refuses beyond it. LinkedIn's own limits
+approve in a UTC day. Export separately limits how many notes enter the CSV
+in a UTC day, using export timestamps rather than review dates. Existing
+databases gain an `exported_at` field on open; old exported rows have no known
+export time and do not count against today's export cap. On the day you upgrade,
+check any CSVs already exported before running another export. LinkedIn's own limits
 for new connection requests are roughly 100-200/week and they tighten without
 warning - keep the cap conservative. Sending is manual, at your pace.
 
