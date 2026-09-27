@@ -91,7 +91,12 @@ def cmd_review(args):
 
 def cmd_export(args):
     cfg, conn = _open(args)
-    rows, text, warning = pipeline.export_approved(conn, cfg, out_path=args.out)
+    try:
+        rows, text, warning = pipeline.export_approved(conn, cfg, out_path=args.out)
+    except FileExistsError:
+        print(f"export failed: {args.out} already exists; choose a new output path",
+              file=sys.stderr)
+        sys.exit(1)
     if warning:
         print(f"warning: {warning}")
     if args.out:
@@ -141,7 +146,7 @@ def main(argv=None):
     sub.add_parser("review", help="terminal approval queue: approve/edit/reject")
 
     pe = sub.add_parser("export", help="export approved batch as CSV (manual sending)")
-    pe.add_argument("--out", help="output CSV path (omit to print to stdout)")
+    pe.add_argument("--out", help="new output CSV path; refuses to overwrite (omit to print to stdout)")
 
     po = sub.add_parser("outcome", help="backfill what happened after you sent")
     po.add_argument("--url", required=True, help="lead profile URL")
