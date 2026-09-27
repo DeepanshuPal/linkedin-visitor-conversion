@@ -177,7 +177,7 @@ def export_approved(conn, cfg, out_path=None, mark_exported=True):
                          r["profile_url"], note, len(note)])
     text = output.getvalue()
     if out_path:
-        with open(out_path, "w", encoding="utf-8", newline="") as f:
+        with open(out_path, "x", encoding="utf-8", newline="") as f:
             f.write(text)
     if mark_exported:
         exported_at = utcnow()
