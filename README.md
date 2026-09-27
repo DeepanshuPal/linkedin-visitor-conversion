@@ -73,7 +73,7 @@ lvc ingest --csv samples/visitors.sample.csv
 lvc qualify
 lvc draft
 lvc review                    # approve/edit/reject each note
-lvc export --out approved.csv
+lvc export --out approved.csv  # refuses to overwrite an existing file
 lvc runs                      # the append-only audit trail
 ```
 
@@ -139,7 +139,9 @@ databases gain an `exported_at` field on open; old exported rows have no known
 export time and do not count against today's export cap. On the day you upgrade,
 check any CSVs already exported before running another export. LinkedIn's own limits
 for new connection requests are roughly 100-200/week and they tighten without
-warning - keep the cap conservative. Sending is manual, at your pace.
+warning - keep the cap conservative. An export to `--out` refuses to overwrite an existing file, even when no notes remain.
+Use a fresh filename for each batch; the previous CSV and unsent notes stay intact.
+Sending is manual, at your pace.
 
 ## Honesty box: verified vs stubbed
 
