@@ -98,12 +98,13 @@ def cmd_export(args):
               file=sys.stderr)
         sys.exit(1)
     if warning:
-        print(f"warning: {warning}")
+        print(f"warning: {warning}", file=sys.stderr)
     if args.out:
         print(f"wrote {len(rows)} approved notes to {args.out}")
     else:
         print(text, end="")
-    print("send these manually on LinkedIn - this tool never sends for you.")
+    print("send these manually on LinkedIn - this tool never sends for you.",
+          file=sys.stderr)
 
 
 def cmd_outcome(args):

@@ -141,7 +141,9 @@ check any CSVs already exported before running another export. LinkedIn's own li
 for new connection requests are roughly 100-200/week and they tighten without
 warning - keep the cap conservative. An export to `--out` refuses to overwrite an existing file, even when no notes remain.
 Use a fresh filename for each batch; the previous CSV and unsent notes stay intact.
-Sending is manual, at your pace.
+Sending is manual, at your pace. If `--out` is omitted, `lvc export` writes only
+CSV to stdout, so `lvc export > approved.csv` is safe to parse. Rate-cap
+warnings and the manual-send reminder go to stderr.
 
 ## Honesty box: verified vs stubbed
 
